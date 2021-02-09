@@ -1,0 +1,31 @@
+{
+  "name": "chessboard",
+  "version": "1.0.0",
+  "description": "chessboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hyperchessbot/chessboard.git"
+  },
+  "keywords": [
+    "discord",
+    "lambda"
+  ],
+  "author": "hyperchessbot",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hyperchessbot/chessboard/issues"
+  },
+  "homepage": "https://github.com/hyperchessbot/chessboard#readme",
+  "dependencies": {    
+  },
+  "devDependencies": {    
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "^11.1.1",
+    "marked": "^2.0.0",    
+    "prettier": "2.2.1"
+  }
+}
