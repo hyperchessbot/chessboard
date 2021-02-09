@@ -28,7 +28,6 @@
     <div id="root"></div>
 
     <script>
-      console.log("chessops", Chessops);
       const { parseFen, makeFen } = Chessops.fen;
       const { Chess, parseUci } = Chessops;
 
@@ -66,7 +65,6 @@
           super("div");
           this.cb = ChessBoard();
           this.a(this.cb);
-          console.log("cb", this.cb);
 
           setTimeout((_) => {
             this.cb
