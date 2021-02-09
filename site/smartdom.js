@@ -722,3 +722,65 @@ class Logger_ extends SmartdomElement_ {
 function Logger(...props) {
   return new Logger_(props);
 }
+
+// chessground element
+class ChessBoard_ extends SmartdomElement_ {
+  constructor(...props) {
+    super("div", props);
+
+    this.ac("chessground").as("display", "inline-block");
+
+    this.chessgroundContainer = div();
+
+    this.config = {
+      fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR",
+      drawable: {
+        enabled: true,
+        visible: true,
+      },
+    };
+
+    this.size(450);
+
+    this.a(this.chessgroundContainer);
+  }
+
+  lastMove(lm) {
+    this.config.lastMove = lm;
+
+    return this.setChessground();
+  }
+
+  cf(key, value, render) {
+    this.config[key] = value;
+
+    return render ? this.setChessground() : this;
+  }
+
+  fen(fen) {
+    this.config.fen = fen;
+
+    return this.setChessground();
+  }
+
+  size(s) {
+    this.size = s;
+
+    this.config.size = this.size;
+
+    this.chessgroundContainer
+      .aspx("width", this.size)
+      .aspx("height", this.size);
+
+    return this.setChessground();
+  }
+
+  setChessground() {
+    this.chessground = Chessground(this.chessgroundContainer.e, this.config);
+
+    return this;
+  }
+}
+function ChessBoard(...props) {
+  return new ChessBoard_(props);
+}

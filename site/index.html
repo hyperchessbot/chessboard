@@ -25,19 +25,30 @@
   </head>
 
   <body>
-    <div id="root" style="margin-top: 300px"></div>
+    <div id="root"></div>
 
     <script>
-      const config = {
-        fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR",
-        lastMove: ["e2", "e4"],
-        drawable: {
-          enabled: true,
-          visible: true,
-        },
-      };
+      class App_ extends SmartdomElement_ {
+        constructor(...props) {
+          super("div");
+          this.cb = ChessBoard();
+          this.a(this.cb);
+          console.log("cb", this.cb);
 
-      const ground = Chessground(document.getElementById("root"), config);
+          setTimeout((_) => {
+            this.cb
+              .cf("fen", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR")
+              .cf("lastMove", ["e2", "e4"], true);
+          }, 2000);
+        }
+      }
+      function App(...props) {
+        return new App_(props);
+      }
+
+      const app = App();
+
+      document.getElementById("root").appendChild(app.e);
     </script>
   </body>
 </html>

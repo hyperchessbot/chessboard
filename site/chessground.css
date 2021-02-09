@@ -14,8 +14,6 @@ cg-helper {
 
 cg-container {
   position: absolute;
-  width: 220px;
-  height: 220px;
   display: block;
   bottom: 0;
 }

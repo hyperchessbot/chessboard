@@ -3342,5 +3342,5 @@ var Chessops = (function (result_1) {
   var index = /*@__PURE__*/ getDefaultExportFromCjs(chessops);
 
   return index;
-})(result);
+})(/*result*/ null);
 //# sourceMappingURL=chessops.js.map

@@ -1630,7 +1630,7 @@ var Chessground = (function () {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.renderWrap = void 0;
 
-    function renderWrap(element, s, relative) {
+    function renderWrap(element, s, relative, size) {
       element.innerHTML = "";
       element.classList.add("cg-wrap");
       for (const c of types.colors)
@@ -1639,6 +1639,10 @@ var Chessground = (function () {
       const helper = util.createEl("cg-helper");
       element.appendChild(helper);
       const container = util.createEl("cg-container");
+      // !!!
+      container.style.width = `${size}px`;
+      container.style.height = `${size}px`;
+      // !!!
       helper.appendChild(container);
       const board = util.createEl("cg-board");
       container.appendChild(board);
@@ -2037,7 +2041,12 @@ var Chessground = (function () {
         const prevUnbind =
           "dom" in maybeState ? maybeState.dom.unbind : undefined;
         const relative = maybeState.viewOnly && !maybeState.drawable.visible,
-          elements = wrap.renderWrap(element, maybeState, relative),
+          elements = wrap.renderWrap(
+            element,
+            maybeState,
+            relative,
+            config$1.size
+          ),
           bounds = util.memo(() => elements.board.getBoundingClientRect()),
           redrawNow = (skipSvg) => {
             render_1.render(state);
