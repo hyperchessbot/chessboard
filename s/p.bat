@@ -6,6 +6,6 @@ git commit -m "%*"
 
 pause
 
-git push
+git push --set-upstream origin master
 
 git push gitlab
