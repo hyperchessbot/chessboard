@@ -1,11 +1,5 @@
-var Chessops = (function (result_1) {
+var Chessops = (function () {
   "use strict";
-
-  function _interopDefaultLegacy(e) {
-    return e && typeof e === "object" && "default" in e ? e : { default: e };
-  }
-
-  var result_1__default = /*#__PURE__*/ _interopDefaultLegacy(result_1);
 
   function getDefaultExportFromCjs(x) {
     return x &&
@@ -13,6 +7,27 @@ var Chessops = (function (result_1) {
       Object.prototype.hasOwnProperty.call(x, "default")
       ? x["default"]
       : x;
+  }
+
+  function getAugmentedNamespace(n) {
+    if (n.__esModule) return n;
+    var a = Object.defineProperty({}, "__esModule", { value: true });
+    Object.keys(n).forEach(function (k) {
+      var d = Object.getOwnPropertyDescriptor(n, k);
+      Object.defineProperty(
+        a,
+        k,
+        d.get
+          ? d
+          : {
+              enumerable: true,
+              get: function () {
+                return n[k];
+              },
+            }
+      );
+    });
+    return a;
   }
 
   function createCommonjsModule(fn) {
@@ -860,6 +875,120 @@ var Chessops = (function (result_1) {
     exports.defaultSetup = defaultSetup;
   });
 
+  function r(r, n) {
+    (r.prototype = Object.create(n.prototype)),
+      (r.prototype.constructor = r),
+      (r.__proto__ = n);
+  }
+  var n,
+    t = (function () {
+      function r() {}
+      var t = r.prototype;
+      return (
+        (t.unwrap = function (r, t) {
+          var o = this._chain(
+            function (t) {
+              return n.ok(r ? r(t) : t);
+            },
+            function (r) {
+              return t ? n.ok(t(r)) : n.err(r);
+            }
+          );
+          if (o.isErr) throw o.error;
+          return o.value;
+        }),
+        (t.map = function (r, t) {
+          return this._chain(
+            function (t) {
+              return n.ok(r(t));
+            },
+            function (r) {
+              return n.err(t ? t(r) : r);
+            }
+          );
+        }),
+        (t.chain = function (r, t) {
+          return this._chain(
+            r,
+            t ||
+              function (r) {
+                return n.err(r);
+              }
+          );
+        }),
+        r
+      );
+    })(),
+    o = (function (n) {
+      function t(r) {
+        var t;
+        return (
+          ((t = n.call(this) || this).value = r),
+          (t.isOk = !0),
+          (t.isErr = !1),
+          t
+        );
+      }
+      return (
+        r(t, n),
+        (t.prototype._chain = function (r, n) {
+          return r(this.value);
+        }),
+        t
+      );
+    })(t),
+    e = (function (n) {
+      function t(r) {
+        var t;
+        return (
+          ((t = n.call(this) || this).error = r),
+          (t.isOk = !1),
+          (t.isErr = !0),
+          t
+        );
+      }
+      return (
+        r(t, n),
+        (t.prototype._chain = function (r, n) {
+          return n(this.error);
+        }),
+        t
+      );
+    })(t);
+  !(function (r) {
+    (r.ok = function (r) {
+      return new o(r);
+    }),
+      (r.err = function (r) {
+        return new e(r || new Error());
+      }),
+      (r.all = function (n) {
+        if (Array.isArray(n)) {
+          for (var t = [], o = 0; o < n.length; o++) {
+            var e = n[o];
+            if (e.isErr) return e;
+            t.push(e.value);
+          }
+          return r.ok(t);
+        }
+        for (var u = {}, i = Object.keys(n), c = 0; c < i.length; c++) {
+          var a = n[i[c]];
+          if (a.isErr) return a;
+          u[i[c]] = a.value;
+        }
+        return r.ok(u);
+      });
+  })(n || (n = {}));
+
+  var dist = /*#__PURE__*/ Object.freeze({
+    __proto__: null,
+    get Result() {
+      return n;
+    },
+  });
+
+  var result_1 = /*@__PURE__*/ getAugmentedNamespace(dist);
+
   var chess = createCommonjsModule(function (module, exports) {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Chess = exports.Position = exports.Castles = exports.PositionError = exports.IllegalSetup = void 0;
@@ -1321,22 +1450,14 @@ var Chessops = (function (result_1) {
       }
       validate() {
         if (this.board.occupied.isEmpty())
-          return result_1__default["default"].Result.err(
-            new PositionError(IllegalSetup.Empty)
-          );
+          return result_1.Result.err(new PositionError(IllegalSetup.Empty));
         if (this.board.king.size() !== 2)
-          return result_1__default["default"].Result.err(
-            new PositionError(IllegalSetup.Kings)
-          );
+          return result_1.Result.err(new PositionError(IllegalSetup.Kings));
         if (!util.defined(this.board.kingOf(this.turn)))
-          return result_1__default["default"].Result.err(
-            new PositionError(IllegalSetup.Kings)
-          );
+          return result_1.Result.err(new PositionError(IllegalSetup.Kings));
         const otherKing = this.board.kingOf(util.opposite(this.turn));
         if (!util.defined(otherKing))
-          return result_1__default["default"].Result.err(
-            new PositionError(IllegalSetup.Kings)
-          );
+          return result_1.Result.err(new PositionError(IllegalSetup.Kings));
         if (
           this.kingAttackers(
             otherKing,
@@ -1344,11 +1465,11 @@ var Chessops = (function (result_1) {
             this.board.occupied
           ).nonEmpty()
         )
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new PositionError(IllegalSetup.OppositeCheck)
           );
         if (squareSet.SquareSet.backranks().intersects(this.board.pawn))
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new PositionError(IllegalSetup.PawnsOnBackrank)
           );
         return this.validateCheckers();
@@ -1367,20 +1488,20 @@ var Chessops = (function (result_1) {
             (checkers.size() === 2 &&
               attacks_1.ray(checkers.first(), checkers.last()).has(ourKing))
           )
-            return result_1__default["default"].Result.err(
+            return result_1.Result.err(
               new PositionError(IllegalSetup.ImpossibleCheck)
             );
           // En passant square aligned with checker and king.
           if (util.defined(this.epSquare)) {
             for (const checker of checkers) {
               if (attacks_1.ray(checker, this.epSquare).has(ourKing))
-                return result_1__default["default"].Result.err(
+                return result_1.Result.err(
                   new PositionError(IllegalSetup.ImpossibleCheck)
                 );
             }
           }
         }
-        return result_1__default["default"].Result.ok(undefined);
+        return result_1.Result.ok(undefined);
       }
       validEpSquare(square) {
         if (!util.defined(square)) return;
@@ -1706,15 +1827,11 @@ var Chessops = (function (result_1) {
           if (step > 0) file += step;
           else {
             if (file >= 8 || rank < 0)
-              return result_1__default["default"].Result.err(
-                new FenError(InvalidFen.Board)
-              );
+              return result_1.Result.err(new FenError(InvalidFen.Board));
             const square = file + rank * 8;
             const piece = charToPiece(c);
             if (!piece)
-              return result_1__default["default"].Result.err(
-                new FenError(InvalidFen.Board)
-              );
+              return result_1.Result.err(new FenError(InvalidFen.Board));
             if (boardPart[i + 1] === "~") {
               piece.promoted = true;
               i++;
@@ -1725,37 +1842,28 @@ var Chessops = (function (result_1) {
         }
       }
       if (rank !== 0 || file !== 8)
-        return result_1__default["default"].Result.err(
-          new FenError(InvalidFen.Board)
-        );
-      return result_1__default["default"].Result.ok(board$1);
+        return result_1.Result.err(new FenError(InvalidFen.Board));
+      return result_1.Result.ok(board$1);
     }
     exports.parseBoardFen = parseBoardFen;
     function parsePockets(pocketPart) {
       if (pocketPart.length > 64)
-        return result_1__default["default"].Result.err(
-          new FenError(InvalidFen.Pockets)
-        );
+        return result_1.Result.err(new FenError(InvalidFen.Pockets));
       const pockets = setup.Material.empty();
       for (const c of pocketPart) {
         const piece = charToPiece(c);
         if (!piece)
-          return result_1__default["default"].Result.err(
-            new FenError(InvalidFen.Pockets)
-          );
+          return result_1.Result.err(new FenError(InvalidFen.Pockets));
         pockets[piece.color][piece.role]++;
       }
-      return result_1__default["default"].Result.ok(pockets);
+      return result_1.Result.ok(pockets);
     }
     exports.parsePockets = parsePockets;
     function parseCastlingFen(board, castlingPart) {
       let unmovedRooks = squareSet.SquareSet.empty();
-      if (castlingPart === "-")
-        return result_1__default["default"].Result.ok(unmovedRooks);
+      if (castlingPart === "-") return result_1.Result.ok(unmovedRooks);
       if (!/^[KQABCDEFGH]{0,2}[kqabcdefgh]{0,2}$/.test(castlingPart)) {
-        return result_1__default["default"].Result.err(
-          new FenError(InvalidFen.Castling)
-        );
+        return result_1.Result.err(new FenError(InvalidFen.Castling));
       }
       for (const c of castlingPart) {
         const lower = c.toLowerCase();
@@ -1778,7 +1886,7 @@ var Chessops = (function (result_1) {
           }
         }
       }
-      return result_1__default["default"].Result.ok(unmovedRooks);
+      return result_1.Result.ok(unmovedRooks);
     }
     exports.parseCastlingFen = parseCastlingFen;
     function parseRemainingChecks(part) {
@@ -1792,10 +1900,8 @@ var Chessops = (function (result_1) {
           !util.defined(black) ||
           black > 3
         )
-          return result_1__default["default"].Result.err(
-            new FenError(InvalidFen.RemainingChecks)
-          );
-        return result_1__default["default"].Result.ok(
+          return result_1.Result.err(new FenError(InvalidFen.RemainingChecks));
+        return result_1.Result.ok(
           new setup.RemainingChecks(3 - white, 3 - black)
         );
       } else if (parts.length === 2) {
@@ -1807,16 +1913,10 @@ var Chessops = (function (result_1) {
           !util.defined(black) ||
           black > 3
         )
-          return result_1__default["default"].Result.err(
-            new FenError(InvalidFen.RemainingChecks)
-          );
-        return result_1__default["default"].Result.ok(
-          new setup.RemainingChecks(white, black)
-        );
+          return result_1.Result.err(new FenError(InvalidFen.RemainingChecks));
+        return result_1.Result.ok(new setup.RemainingChecks(white, black));
       } else
-        return result_1__default["default"].Result.err(
-          new FenError(InvalidFen.RemainingChecks)
-        );
+        return result_1.Result.err(new FenError(InvalidFen.RemainingChecks));
     }
     exports.parseRemainingChecks = parseRemainingChecks;
     function parseFen(fen) {
@@ -1824,13 +1924,11 @@ var Chessops = (function (result_1) {
       const boardPart = parts.shift();
       // Board and pockets
       let board,
-        pockets = result_1__default["default"].Result.ok(undefined);
+        pockets = result_1.Result.ok(undefined);
       if (boardPart.endsWith("]")) {
         const pocketStart = boardPart.indexOf("[");
         if (pocketStart === -1)
-          return result_1__default["default"].Result.err(
-            new FenError(InvalidFen.Fen)
-          );
+          return result_1.Result.err(new FenError(InvalidFen.Fen));
         board = parseBoardFen(boardPart.substr(0, pocketStart));
         pockets = parsePockets(
           boardPart.substr(
@@ -1851,25 +1949,20 @@ var Chessops = (function (result_1) {
       const turnPart = parts.shift();
       if (!util.defined(turnPart) || turnPart === "w") turn = "white";
       else if (turnPart === "b") turn = "black";
-      else
-        return result_1__default["default"].Result.err(
-          new FenError(InvalidFen.Turn)
-        );
+      else return result_1.Result.err(new FenError(InvalidFen.Turn));
       return board.chain((board) => {
         // Castling
         const castlingPart = parts.shift();
         const unmovedRooks = util.defined(castlingPart)
           ? parseCastlingFen(board, castlingPart)
-          : result_1__default["default"].Result.ok(squareSet.SquareSet.empty());
+          : result_1.Result.ok(squareSet.SquareSet.empty());
         // En passant square
         const epPart = parts.shift();
         let epSquare;
         if (util.defined(epPart) && epPart !== "-") {
           epSquare = util.parseSquare(epPart);
           if (!util.defined(epSquare))
-            return result_1__default["default"].Result.err(
-              new FenError(InvalidFen.EpSquare)
-            );
+            return result_1.Result.err(new FenError(InvalidFen.EpSquare));
         }
         // Halfmoves or remaining checks
         let halfmovePart = parts.shift();
@@ -1882,22 +1975,18 @@ var Chessops = (function (result_1) {
           ? parseSmallUint(halfmovePart)
           : 0;
         if (!util.defined(halfmoves))
-          return result_1__default["default"].Result.err(
-            new FenError(InvalidFen.Halfmoves)
-          );
+          return result_1.Result.err(new FenError(InvalidFen.Halfmoves));
         const fullmovesPart = parts.shift();
         const fullmoves = util.defined(fullmovesPart)
           ? parseSmallUint(fullmovesPart)
           : 1;
         if (!util.defined(fullmoves))
-          return result_1__default["default"].Result.err(
-            new FenError(InvalidFen.Fullmoves)
-          );
+          return result_1.Result.err(new FenError(InvalidFen.Fullmoves));
         const remainingChecksPart = parts.shift();
-        let remainingChecks = result_1__default["default"].Result.ok(undefined);
+        let remainingChecks = result_1.Result.ok(undefined);
         if (util.defined(remainingChecksPart)) {
           if (util.defined(earlyRemainingChecks))
-            return result_1__default["default"].Result.err(
+            return result_1.Result.err(
               new FenError(InvalidFen.RemainingChecks)
             );
           remainingChecks = parseRemainingChecks(remainingChecksPart);
@@ -1905,9 +1994,7 @@ var Chessops = (function (result_1) {
           remainingChecks = earlyRemainingChecks;
         }
         if (parts.length > 0)
-          return result_1__default["default"].Result.err(
-            new FenError(InvalidFen.Fen)
-          );
+          return result_1.Result.err(new FenError(InvalidFen.Fen));
         return pockets.chain((pockets) =>
           unmovedRooks.chain((unmovedRooks) =>
             remainingChecks.map((remainingChecks) => {
@@ -2519,7 +2606,7 @@ var Chessops = (function (result_1) {
             this.pockets &&
             (this.pockets.white.king > 0 || this.pockets.black.king > 0)
           ) {
-            return result_1__default["default"].Result.err(
+            return result_1.Result.err(
               new chess.PositionError(chess.IllegalSetup.Kings)
             );
           }
@@ -2528,11 +2615,11 @@ var Chessops = (function (result_1) {
               this.board.occupied.size() >
             64
           ) {
-            return result_1__default["default"].Result.err(
+            return result_1.Result.err(
               new chess.PositionError(chess.IllegalSetup.Variant)
             );
           }
-          return result_1__default["default"].Result.ok(undefined);
+          return result_1.Result.ok(undefined);
         });
       }
       clone() {
@@ -2599,16 +2686,16 @@ var Chessops = (function (result_1) {
       validate() {
         // Like chess, but allow our king to be missing and any number of checkers.
         if (this.board.occupied.isEmpty())
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.Empty)
           );
         if (this.board.king.size() > 2)
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.Kings)
           );
         const otherKing = this.board.kingOf(util.opposite(this.turn));
         if (!util.defined(otherKing))
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.Kings)
           );
         if (
@@ -2618,16 +2705,16 @@ var Chessops = (function (result_1) {
             this.board.occupied
           ).nonEmpty()
         ) {
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.OppositeCheck)
           );
         }
         if (squareSet.SquareSet.backranks().intersects(this.board.pawn)) {
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.PawnsOnBackrank)
           );
         }
-        return result_1__default["default"].Result.ok(undefined);
+        return result_1.Result.ok(undefined);
       }
       kingAttackers(square, attacker, occupied) {
         if (
@@ -2757,14 +2844,14 @@ var Chessops = (function (result_1) {
       }
       validate() {
         if (this.board.occupied.isEmpty())
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.Empty)
           );
         if (squareSet.SquareSet.backranks().intersects(this.board.pawn))
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.PawnsOnBackrank)
           );
-        return result_1__default["default"].Result.ok(undefined);
+        return result_1.Result.ok(undefined);
       }
       kingAttackers(_square, _attacker, _occupied) {
         return squareSet.SquareSet.empty();
@@ -2913,11 +3000,11 @@ var Chessops = (function (result_1) {
       }
       validate() {
         if (this.isCheck())
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.ImpossibleCheck)
           );
         if (this.board.pawn.nonEmpty())
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.Variant)
           );
         return super.validate();
@@ -2995,15 +3082,15 @@ var Chessops = (function (result_1) {
       }
       validate() {
         if (this.board.occupied.isEmpty())
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.Empty)
           );
         if (!this.board.king.isSingleSquare())
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.Kings)
           );
         if (!this.board.king.diff(this.board.promoted).isSingleSquare())
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.Kings)
           );
         const otherKing = this.board.kingOf(util.opposite(this.turn));
@@ -3015,7 +3102,7 @@ var Chessops = (function (result_1) {
             this.board.occupied
           ).nonEmpty()
         )
-          return result_1__default["default"].Result.err(
+          return result_1.Result.err(
             new chess.PositionError(chess.IllegalSetup.OppositeCheck)
           );
         for (const color of types.COLORS) {
@@ -3024,7 +3111,7 @@ var Chessops = (function (result_1) {
               .pieces(color, "pawn")
               .intersects(squareSet.SquareSet.backrank(util.opposite(color)))
           ) {
-            return result_1__default["default"].Result.err(
+            return result_1.Result.err(
               new chess.PositionError(chess.IllegalSetup.PawnsOnBackrank)
             );
           }
@@ -3342,5 +3429,5 @@ var Chessops = (function (result_1) {
   var index = /*@__PURE__*/ getDefaultExportFromCjs(chessops);
 
   return index;
-})(/*result*/ null);
+})();
 //# sourceMappingURL=chessops.js.map

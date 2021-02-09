@@ -1,10 +1,11 @@
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 export default {
   input: 'index.js',
   external : [
-    "@badrap/result"
+    //"@badrap/result"
   ],
   output: [
     {
@@ -12,7 +13,7 @@ export default {
       format: 'iife',
       name: 'Chessops',
       globals: {
-        "@badrap/result": "result"
+        //"@badrap/result": "result"
       },
       sourcemap: true,
     },
@@ -22,5 +23,6 @@ export default {
     commonjs({
       extensions: ['.js', '.ts'],
     }),
+    nodeResolve()
   ],
 };

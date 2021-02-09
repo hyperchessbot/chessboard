@@ -28,6 +28,39 @@
     <div id="root"></div>
 
     <script>
+      console.log("chessops", Chessops);
+      const { parseFen, makeFen } = Chessops.fen;
+      const { Chess, parseUci } = Chessops;
+
+      const startFen =
+        "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+      function posFromFen(fen) {
+        const setup = parseFen(fen).unwrap();
+        const pos = Chess.fromSetup(setup).unwrap();
+
+        return pos;
+      }
+
+      function posToFen(pos) {
+        const fen = makeFen(pos.toSetup(), null);
+
+        return fen;
+      }
+
+      function makeUciMove(pos, uci) {
+        const m = parseUci(uci);
+        pos.play(m);
+      }
+
+      let pos = posFromFen(startFen);
+
+      const move = window.prompt("Move uci");
+
+      makeUciMove(pos, move);
+
+      const newFen = posToFen(pos);
+
       class App_ extends SmartdomElement_ {
         constructor(...props) {
           super("div");
@@ -37,8 +70,12 @@
 
           setTimeout((_) => {
             this.cb
-              .cf("fen", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR")
-              .cf("lastMove", ["e2", "e4"], true);
+              .cf("fen", newFen)
+              .cf(
+                "lastMove",
+                [move.substring(0, 2), move.substring(2, 4)],
+                true
+              );
           }, 2000);
         }
       }
