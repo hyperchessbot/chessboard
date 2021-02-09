@@ -15,15 +15,29 @@
 
     <title>Chessboard</title>
 
+    <link rel="stylesheet" href="chessground.css" />
     <link rel="stylesheet" href="smartdom.css" />
     <link rel="stylesheet" href="app.css" />
 
+    <script src="chessops.js"></script>
+    <script src="chessground.js"></script>
     <script src="smartdom.js"></script>
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root" style="margin-top: 300px"></div>
 
-    <script></script>
+    <script>
+      const config = {
+        fen: "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR",
+        lastMove: ["e2", "e4"],
+        drawable: {
+          enabled: true,
+          visible: true,
+        },
+      };
+
+      const ground = Chessground(document.getElementById("root"), config);
+    </script>
   </body>
 </html>
